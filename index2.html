@@ -1,12 +1,27 @@
-<!DOCTYPE html >
+.dashboard-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .dashboard-header h2 {
+      color: var(--primary-color);
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .dashboard-header p {
+      color: #666;
+      font-size: 1rem;
+    }<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Projetos Crypto</title>
+  <title>Ecossistema Hyperliquid</title>
   <style>
     :root {
       --primary-color: #6e57e0;
+      --secondary-color: #4b3dc0;
       --background-color: #f9f9fb;
       --card-color: #ffffff;
       --text-color: #333333;
@@ -115,11 +130,14 @@
       text-decoration: none;
       display: inline-block;
       transition: all 0.2s ease;
+      border-bottom: 1px dashed rgba(110, 87, 224, 0.3);
+      padding-bottom: 1px;
     }
     
     a.site-link:hover {
-      text-decoration: underline;
+      text-decoration: none;
       transform: translateY(-1px);
+      border-bottom: 1px solid var(--primary-color);
     }
 
     .category-tag {
@@ -162,6 +180,18 @@
     .details-cell li:last-child {
       margin-bottom: 0;
     }
+    
+    .status-tag.yes::before {
+      content: "✓";
+      display: inline-block;
+      margin-right: 4px;
+    }
+    
+    .status-tag.no::before {
+      content: "×";
+      display: inline-block;
+      margin-right: 4px;
+    }
 
     @media (max-width: 1024px) {
       table {
@@ -192,45 +222,48 @@
   <div class="container">
     <div class="filters">
       <div>
-        <label for="category-filter">Filtrar por Categoria:</label>
+        <label for="category-filter">Segmento:</label>
         <select id="category-filter">
-          <option value="all">Todas Categorias</option>
-          <option value="NFT">NFT</option>
-          <option value="DEX">DEX</option>
-          <option value="Lending / Pool">Lending / Pool</option>
-          <option value="Yield Optimization">Yield Optimization</option>
-          <option value="Stablecoin">Stablecoin</option>
-          <option value="LST/Staking">LST/Staking</option>
-          <option value="Bridge">Bridge</option>
-          <option value="Spot Exchange">Spot Exchange</option>
-          <option value="Trading">Trading</option>
-          <option value="AI/Agent">AI/Agent</option>
-          <option value="Mobile App">Mobile App</option>
-          <option value="Digital ID">Digital ID</option>
+          <option value="all">Todos os segmentos</option>
+          <option value="NFT">Colecionáveis (NFT)</option>
+          <option value="DEX">Exchanges Descentralizadas</option>
+          <option value="Lending / Pool">Empréstimos & Pools</option>
+          <option value="Yield Optimization">Otimização de Rendimento</option>
+          <option value="Stablecoin">Moedas Estáveis</option>
+          <option value="LST/Staking">Staking & LST</option>
+          <option value="Bridge">Pontes Blockchain</option>
+          <option value="Spot Exchange">Mercado à Vista</option>
+          <option value="Trading">Ferramentas de Trading</option>
+          <option value="AI/Agent">Inteligência Artificial</option>
+          <option value="Mobile App">Aplicativos Móveis</option>
+          <option value="Digital ID">Identidade Digital</option>
         </select>
       </div>
       <div>
-        <label for="points-filter">Filtrar por Points Live:</label>
+        <label for="points-filter">Recompensas Ativas:</label>
         <select id="points-filter">
-          <option value="all">Todos</option>
-          <option value="yes">Sim</option>
-          <option value="no">Não</option>
+          <option value="all">Todos os projetos</option>
+          <option value="yes">Com recompensas</option>
+          <option value="no">Sem recompensas</option>
         </select>
       </div>
     </div>
     
-    <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary-color); font-size: 1.8rem;">HYPERLIQUID DAPPS</h2>
+    <div class="dashboard-header">
+      <h2>Navegador do Ecossistema Hyperliquid</h2>
+      <p>Explore os protocolos e aplicativos do ecossistema HL</p>
+    </div>
 
     <table id="projects-table">
       <thead>
         <tr>
-          <th>Projeto</th>
-          <th>Categoria</th>
-          <th>X</th>
-          <th>Site</th>
-          <th>Detalhes</th>
-          <th>Observações</th>
-          <th>Points Live</th>
+          <th>Protocolo</th>
+          <th>Tipo</th>
+          <th>Social</th>
+          <th>Website</th>
+          <th>Funcionalidades</th>
+          <th>Insights & Destaques</th>
+          <th>Recompensas</th>
         </tr>
       </thead>
       <tbody>
