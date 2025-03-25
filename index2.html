@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Projetos Crypto</title>
+  <style>
+    :root {
+      --primary-color: #6e57e0;
+      --background-color: #f9f9fb;
+      --card-color: #ffffff;
+      --text-color: #333333;
+      --border-color: #e6e6e6;
+      --success-color: #57b65f;
+      --danger-color: #e57373;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--card-color);
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .twitter-link {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .twitter-link:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background-color: var(--card-color);
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    select {
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--card-color);
+      min-width: 150px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--card-color);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+    }
+    
+    td:last-child, th:last-child {
+      border-right: none;
+    }
+
+    th {
+      background-color: rgba(110, 87, 224, 0.1);
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background-color: rgba(0,0,0,0.02);
+    }
+    
+    a.site-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s ease;
+    }
+    
+    a.site-link:hover {
+      text-decoration: underline;
+      transform: translateY(-1px);
+    }
+
+    .category-tag {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      background-color: rgba(110, 87, 224, 0.1);
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+
+    .status-tag {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .yes {
+      background-color: rgba(87, 182, 95, 0.1);
+      color: var(--success-color);
+    }
+
+    .no {
+      background-color: rgba(229, 115, 115, 0.1);
+      color: var(--danger-color);
+    }
+
+    .details-cell ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .details-cell li {
+      margin-bottom: 0.25rem;
+    }
+
+    .details-cell li:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 1024px) {
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .filters {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="https://twitter.com/cajucrypto" class="twitter-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+        </svg>
+        @cajucrypto
+      </a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="filters">
+      <div>
+        <label for="category-filter">Filtrar por Categoria:</label>
+        <select id="category-filter">
+          <option value="all">Todas Categorias</option>
+          <option value="NFT">NFT</option>
+          <option value="DEX">DEX</option>
+          <option value="Lending / Pool">Lending / Pool</option>
+          <option value="Yield Optimization">Yield Optimization</option>
+          <option value="Stablecoin">Stablecoin</option>
+          <option value="LST/Staking">LST/Staking</option>
+          <option value="Bridge">Bridge</option>
+          <option value="Spot Exchange">Spot Exchange</option>
+          <option value="Trading">Trading</option>
+          <option value="AI/Agent">AI/Agent</option>
+          <option value="Mobile App">Mobile App</option>
+          <option value="Digital ID">Digital ID</option>
+        </select>
+      </div>
+      <div>
+        <label for="points-filter">Filtrar por Points Live:</label>
+        <select id="points-filter">
+          <option value="all">Todos</option>
+          <option value="yes">Sim</option>
+          <option value="no">Não</option>
+        </select>
+      </div>
+    </div>
+    
+    <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary-color); font-size: 1.8rem;">HYPERLIQUID DAPPS</h2>
+
+    <table id="projects-table">
+      <thead>
+        <tr>
+          <th>Projeto</th>
+          <th>Categoria</th>
+          <th>X</th>
+          <th>Site</th>
+          <th>Detalhes</th>
+          <th>Observações</th>
+          <th>Points Live</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hypio</td>
+          <td><span class="category-tag">NFT</span></td>
+          <td>x.com/HypioHL</td>
+          <td>hypio.baby/points</td>
+          <td class="details-cell">
+            <ul>
+              <li>Testnet Validator, Points para cada Hypio Baby mantido (ponderado por tempo)</li>
+              <li>Múltiplos Eco Airdrops, WLs</li>
+              <li>HWO Capital</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Primeiro Milady Deriv no HL</li>
+              <li>Culto Insano</li>
+              <li>Bluechip, nunca vender</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>KittenSwap</td>
+          <td><span class="category-tag">DEX</span></td>
+          <td>x.com/Kit...apHype</td>
+          <td>kittenswap.finance</td>
+          <td class="details-cell">
+            <ul>
+              <li>Coloque sua pilha de airdrop para usar</li>
+              <li>WHYPE/LHYPE é o TVL mais alto</li>
+              <li>Recompensas para adotantes iniciais de LHYPE (condicional)</li>
+              <li>MechaCats NFT (Oferta: 5000) dá acesso a participação proporcional de 3% de $KITTEN no lançamento + multiplicador de pontos</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Crescimento massivo em março '25, em termos de TVL, pools e colaborações com bluechips</li>
+              <li>Forma fácil de manter exposição $HYPE enquanto se qualifica para recompensas adicionais com protocolos parceiros</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>HyperSwap</td>
+          <td><span class="category-tag">DEX</span></td>
+          <td>x.com/HyperSwapX</td>
+          <td>hyperswap.exchange</td>
+          <td class="details-cell">
+            <ul>
+              <li>DEX com Slippage Mínima</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Usar organicamente, como você faria normalmente</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>HyperUnit</td>
+          <td><span class="category-tag">Spot Exchange</span></td>
+          <td>x.com/hyperunit</td>
+          <td></td>
+          <td class="details-cell">
+            <ul>
+              <li>Mercado spot de BTC</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Rotacione uma pequena % do seu portfólio em DCA em BTC</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Harmonix</td>
+          <td><span class="category-tag">Yield Optimization</span></td>
+          <td>x.com/harmonixfi</td>
+          <td></td>
+          <td class="details-cell">
+            <ul>
+              <li>Vault $HYPE Delta Neutro</li>
+              <li>User Points = (Taxa Base (t) × Depósito × Multiplicador do Vault + Bônus de Lealdade) × Fator de Tempo × Δt</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Faz mais sentido em um mercado volátil e se você foi um usuário inicial</li>
+              <li>Funciona se você tem aversão ao risco</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Hypurr Fi</td>
+          <td>
+            <span class="category-tag">Lending / Pool</span><br>
+            <span class="category-tag">Stablecoin</span>
+          </td>
+          <td>
+            https://x.com/HypurrFi;<br>
+            https://x.com/lastdotnet
+          </td>
+          <td>hypurr.fi</td>
+          <td class="details-cell">
+            <ul>
+              <li>Empreste $THYPE/HYPE para tomar emprestado $USDXL ou loop $THYPE</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Empreste um par $USDXL no HyperSwap e KittenSwap (com multiplicadores de pontos variáveis)</li>
+              <li>Adquiriu o ticker $USDXL por $57.676,12</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Kinetiq</td>
+          <td><span class="category-tag">LST/Staking</span></td>
+          <td>x.com/kinetiq_xyz</td>
+          <td></td>
+          <td class="details-cell">
+            <ul>
+              <li>kHYPE chegando em breve</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Mint kHYPE</li>
+              <li>Colateralize kHYPE em um mercado monetário</li>
+              <li>Tome emprestado HYPE</li>
+              <li>Stake esse HYPE para aproveitar os níveis de taxas</li>
+              <li>(Atualmente, LSTs NÃO contam para benefícios de nível de taxas)</li>
+              <li>Todos os chats de baleias estão animados com este lançamento</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Hyperdrive</td>
+          <td><span class="category-tag">Yield Optimization</span></td>
+          <td>x.com/hyp...vedefi</td>
+          <td></td>
+          <td class="details-cell">
+            <ul>
+              <li>Quatro Mercados: Primário, HLP, LST e Meme (Purr)</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Testar as águas</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>HyperFlash</td>
+          <td><span class="category-tag">LST/Staking</span></td>
+          <td>x.com/Hyp...ash_hl</td>
+          <td>hyperflash.xyz</td>
+          <td class="details-cell">
+            <ul>
+              <li>A ser anunciado</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>0% de comissão em LST</li>
+              <li>Mais recompensas através de MEV</li>
+              <li>Stake inicial, referência = maior MEV</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Tread Fi</td>
+          <td></td>
+          <td>x.com/tread_fi</td>
+          <td>tread.fi</td>
+          <td></td>
+          <td></td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>TimeSwap</td>
+          <td><span class="category-tag">Lending / Pool</span></td>
+          <td>x.com/Tim...apLabs</td>
+          <td>app.timeswap.io</td>
+          <td class="details-cell">
+            <ul>
+              <li>Mantenha exposição ao meme bluechip HL ($Buddy), LHYPE e HYPE</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Recompensas $TIME acumuladas ao longo do tempo</li>
+              <li>Equipe respeitada e projeto testado ao longo do tempo</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Laminar</td>
+          <td></td>
+          <td>x.com/laminar_xyz</td>
+          <td>laminar.xyz</td>
+          <td class="details-cell">
+            <ul>
+              <li>Permite depositar $BUDDY, $HYPE, $FeUSD, $wstHYPE em pools</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Uma das interfaces UI/UX mais suaves entre os projetos do ecossistema HL</li>
+              <li>Mais recursos e tokens em desenvolvimento</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Valantis Labs</td>
+          <td><span class="category-tag">DEX</span></td>
+          <td>x.com/Val...isLabs</td>
+          <td>valantis.xyz</td>
+          <td class="details-cell">
+            <ul>
+              <li>$stHYPE AMM, construído especialmente para LSTs</li>
+              <li>Ativos ganham rendimento extra no Hyperlend</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Parceria com Thunderhead Labs (provedor de infraestrutura de staking premium em HL EVM) e Hyperlend</li>
+              <li>Em beta (?)</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Sentiment</td>
+          <td><span class="category-tag">Lending / Pool</span></td>
+          <td>x.com/sen...entxyz</td>
+          <td>app.sentiment.xyz</td>
+          <td class="details-cell">
+            <ul>
+              <li>Empreste e tome emprestado $HYPE</li>
+              <li>Implementado internamente usando 'perps como colateral'</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Financiado pela DCF Cap + veja suporte público da equipe principal do HL</li>
+              <li>Potencial recompensa para adotantes iniciais</li>
+              <li>Espere um crescimento massivo quando lançarem mais recursos</li>
+              <li>Equipe parece talentosa, confie no meu instinto neste</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Staked Hype</td>
+          <td><span class="category-tag">LST/Staking</span></td>
+          <td>x.com/stakedhype</td>
+          <td>stakedhype.fi</td>
+          <td class="details-cell">
+            <ul>
+              <li>Melhor PMF, $wSTHype pode ser usado como colateral em praticamente todos os projetos do ecossistema HL</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Vantagem para os primeiros usuários + todo o ecossistema HL usando fala sobre sua credibilidade</li>
+              <li>Pode ir ao site da ValiDAO e usar sua plataforma/referência para fazer stake do seu HYPE com Staked Hype, supostamente para acumular mais pontos ValiDAO</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Neko</td>
+          <td><span class="category-tag">AI/Agent</span></td>
+          <td>x.com/neko_hl</td>
+          <td></td>
+          <td class="details-cell">
+            <ul>
+              <li>Primeiro enxame DeFAI no HL</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Inscreva-se para o beta privado</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Drip Trade</td>
+          <td><span class="category-tag">NFT</span></td>
+          <td>x.com/drip__trade</td>
+          <td>drip.trade</td>
+          <td class="details-cell">
+            <ul>
+              <li>Exchange de NFT + launchpad</li>
+              <li>Maioria dos NFTs premium lançados aqui + troca nativa de NFT mais acessível</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Aba de recompensas adicionada recentemente, embora não acessível aos usuários</li>
+              <li>$JPEG</li>
+              <li>Troque NFTs facilmente</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Felix Protocol</td>
+          <td>
+            <span class="category-tag">Lending / Pool</span><br>
+            <span class="category-tag">Stablecoin</span>
+          </td>
+          <td>x.com/fel...otocol</td>
+          <td>usefelix.xyz</td>
+          <td class="details-cell">
+            <ul>
+              <li>Leverage looping HYPE para maximizar exposição ao HYPE</li>
+              <li>Ganhe rendimento em stables depositando feUSD em Pools de Estabilidade Felix ou LPing em outros mercados monetários (para facilitar o caso de uso de risco acima)</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Lançamento em beta privado</li>
+              <li>Mint $FeUSD</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Hyperlend</td>
+          <td><span class="category-tag">Lending / Pool</span></td>
+          <td>x.com/hyperlendx</td>
+          <td>app.hyperlend.finance</td>
+          <td class="details-cell">
+            <ul>
+              <li>Deposite e tome emprestado $HYPE e $stHYPE</li>
+              <li>É um fork amigável da Aave</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Demanda insana, caps de $5M preenchidos em minutos após o lançamento</li>
+              <li>Projeto bluechip</li>
+              <li>(Nota: Benefícios de staking em camadas do HL ficam disponíveis em 30 de abril)</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>HL Names</td>
+          <td><span class="category-tag">Digital ID</span></td>
+          <td>x.com/hlnames</td>
+          <td>hlnames.xyz</td>
+          <td class="details-cell">
+            <ul>
+              <li>Serviço de nomes Hyperliquid</li>
+              <li>Leilões estilo inglês em nomes .hl</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Projeto inovador, há uma virada legal em algum lugar</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Net Protocol</td>
+          <td><span class="category-tag">NFT</span></td>
+          <td>x.com/net...colapp</td>
+          <td>netprotocol.app</td>
+          <td class="details-cell">
+            <ul>
+              <li>NFT Secundários no HL</li>
+              <li>Descoberta de preço para projetos ainda não lançados no Drip (imediatamente após mint)</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Potencial para arbitragem entre Net e Drip Trade</li>
+              <li>Não permite cancelamentos de listagem (certifique-se de ter 0dte/expiração próxima)</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Looped Hype</td>
+          <td>
+            <span class="category-tag">LST/Staking</span><br>
+            <span class="category-tag">Yield Optimization</span>
+          </td>
+          <td>x.com/Looped_HYPE</td>
+          <td>loopedhype.com</td>
+          <td class="details-cell">
+            <ul>
+              <li>$HYPE alavancado em loop com mecanismo de rebasemento diário para evitar liquidações</li>
+              <li>~10% APY (vs 2-3% entre parceiros de staking e validadores)</li>
+              <li>Você se qualifica para Adotantes Iniciais se:</li>
+              <li>Registrou sua carteira através do formulário</li>
+              <li>Mintou LHYPE de seu site (vs swapping)</li>
+              <li>Manteve a posição por >8 semanas</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Fase 1 dos Supply Caps da Whitelist fechados</li>
+              <li>Utiliza Staking Rewards, infraestrutura do Nucleus, Hypurr Fi, benefícios potenciais e acumulação de pontos para essas plataformas também</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Lootbase</td>
+          <td><span class="category-tag">Mobile App</span></td>
+          <td>x.com/LootbaseX</td>
+          <td>lootbase.com</td>
+          <td class="details-cell">
+            <ul>
+              <li>Beta privado</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Airdrop para detentores de Hypio</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Hyperlauncher AI</td>
+          <td>
+            <span class="category-tag">AI/Agent</span><br>
+            <span class="category-tag">Trading</span><br>
+            <span class="category-tag">TG Bot</span>
+          </td>
+          <td>x.com/hyp...cherAI</td>
+          <td>hyperlauncher.ai</td>
+          <td></td>
+          <td class="details-cell">
+            <ul>
+              <li>$LAUNCH</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Gigabrain GG</td>
+          <td><span class="category-tag">AI/Agent</span></td>
+          <td>x.com/GigabrainGG</td>
+          <td>gigabrain.gg</td>
+          <td class="details-cell">
+            <ul>
+              <li>Alpha usando tecnologia proprietária</li>
+              <li>Taxa de vitória de 93%</li>
+              <li>Autotrader será lançado em breve (para executar com base no alpha do Terminal GigaBrain)</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Terminal com recursos avançados</li>
+              <li>$BRAIN</li>
+              <li>Requer 1M de tokens $BRAIN para acessar recursos premium</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Dexari</td>
+          <td><span class="category-tag">Mobile App</span></td>
+          <td>x.com/Dex...DotCom</td>
+          <td>dexari.com</td>
+          <td class="details-cell">
+            <ul>
+              <li>Acesso móvel a negociações no Hyperliquid</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Atualmente apenas iOS</li>
+              <li>Recursos sendo lançados em estágios</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>HyBridge</td>
+          <td><span class="category-tag">Bridge</span></td>
+          <td>x.com/HyBridgeHL</td>
+          <td>v3.HyBridge.xyz</td>
+          <td class="details-cell">
+            <ul>
+              <li>Bridge direto para HyperEVM a partir de 33 blockchains</li>
+              <li>Também suporta onboarding direto via fiat para HyperEVM</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Pode trocar pela maioria dos bluechips e memes no HyperEVM enquanto faz bridge</li>
+            </ul>
+          </td>
+          <td><span class="status-tag yes">Sim</span></td>
+        </tr>
+        <tr>
+          <td>HyperStable</td>
+          <td><span class="category-tag">Stablecoin</span></td>
+          <td>x.com/Hyp...tableX</td>
+          <td>hyperstable.xyz</td>
+          <td class="details-cell">
+            <ul>
+              <li>Stablecoin nativa no HyperEVM</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>$USDH <-> $PEG</li>
+              <li>Lançamento em beta público em breve</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Insilico Terminal</td>
+          <td><span class="category-tag">Trading</span></td>
+          <td>x.com/Ins...rading</td>
+          <td>insilicoterminal.com</td>
+          <td class="details-cell">
+            <ul>
+              <li>Configure múltiplos TWAPs, enxames e monitore-os no Hyperliquid</li>
+              <li>Sistema profissional de gerenciamento de ordens, posições e execução</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Terminal avançado, onboarding fácil</li>
+              <li>Negociação de alta frequência com volume</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>HyperDash</td>
+          <td><span class="category-tag">Trading</span></td>
+          <td>x.com/hypurrdash</td>
+          <td>hyperdash.info</td>
+          <td class="details-cell">
+            <ul>
+              <li>Infraestrutura de fund-of-funds on-chain</li>
+              <li>Construção de portfólio entre múltiplos traders vencedores</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Vai além do copytrading básico e analytics</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>HyperFly</td>
+          <td>
+            <span class="category-tag">AI/Agent</span><br>
+            <span class="category-tag">Mobile App</span>
+          </td>
+          <td>x.com/hyperflyai</td>
+          <td>hyperfly.sh</td>
+          <td class="details-cell">
+            <ul>
+              <li>Permite negociar, automatizar e gerenciar suas estratégias em movimento</li>
+              <li>Automações de notícias e execuções de trades, tudo em um só lugar</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Atualmente em beta fechado</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+        <tr>
+          <td>Slate</td>
+          <td>
+            <span class="category-tag">Trading</span><br>
+            <span class="category-tag">AI/Agent</span>
+          </td>
+          <td>x.com/slate_ceo</td>
+          <td>slate.ceo</td>
+          <td class="details-cell">
+            <ul>
+              <li>Agente de IA pessoal para processar seus feeds de informação e colocar trades rápidos</li>
+            </ul>
+          </td>
+          <td class="details-cell">
+            <ul>
+              <li>Feeds alfa personalizados e curados, e execução, iluminando rápido</li>
+            </ul>
+          </td>
+          <td><span class="status-tag no">Não</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const table = document.getElementById('projects-table');
+      const categoryFilter = document.getElementById('category-filter');
+      const pointsFilter = document.getElementById('points-filter');
+      const rows = table.querySelectorAll('tbody tr');
+      
+      // Converter URLs em links clicáveis
+      rows.forEach(row => {
+        // Coluna X (Twitter)
+        const xCell = row.querySelector('td:nth-child(3)');
+        if (xCell) {
+          const content = xCell.innerHTML;
+          
+          // Regex para encontrar URLs começando com x.com ou https://
+          const urlRegex = /(https?:\/\/[^\s;]+|x\.com\/[^\s;]+)/g;
+          
+          // Substituir URLs por links
+          xCell.innerHTML = content.replace(urlRegex, url => {
+            // Garantir que a URL começa com https://
+            const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+            return `<a href="${fullUrl}" target="_blank" rel="noopener noreferrer" class="site-link">${url}</a>`;
+          });
+        }
+        
+        // Coluna Site
+        const siteCell = row.querySelector('td:nth-child(4)');
+        if (siteCell && siteCell.textContent.trim()) {
+          const siteUrl = siteCell.textContent.trim();
+          
+          // Criar link apenas se houver conteúdo
+          if (siteUrl) {
+            // Garantir que a URL começa com https://
+            const fullUrl = siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`;
+            siteCell.innerHTML = `<a href="${fullUrl}" target="_blank" rel="noopener noreferrer" class="site-link">${siteUrl}</a>`;
+          }
+        }
+      });
+
+      function filterTable() {
+        const selectedCategory = categoryFilter.value;
+        const selectedPoints = pointsFilter.value;
+
+        rows.forEach(row => {
+          const categoryCell = row.querySelector('td:nth-child(2)');
+          const pointsCell = row.querySelector('td:nth-child(7)');
+          
+          const categoryTags = categoryCell ? Array.from(categoryCell.querySelectorAll('.category-tag')).map(tag => tag.textContent) : [];
+          
+          // Check if the points cell has the "yes" class for "Sim" or not for "Não"
+          const statusTag = pointsCell ? pointsCell.querySelector('.status-tag') : null;
+          const isPointsLive = statusTag ? statusTag.classList.contains('yes') : false;
+          
+          const categoryMatch = selectedCategory === 'all' || (categoryTags.length > 0 && categoryTags.includes(selectedCategory));
+          const pointsMatch = selectedPoints === 'all' || 
+                             (selectedPoints === 'yes' && isPointsLive) || 
+                             (selectedPoints === 'no' && !isPointsLive);
+          
+          if (categoryMatch && pointsMatch) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+
+      categoryFilter.addEventListener('change', filterTable);
+      pointsFilter.addEventListener('change', filterTable);
+    });
+  </script>
+</body>
+</html>
