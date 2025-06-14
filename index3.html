@@ -1,282 +1,318 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Badges Table Drip hunter</title>
+    <title>@cajucrypto - DripTrade Badges</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f5f7fa;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-color: #0f0f1a;
+            background-image: repeating-linear-gradient(
+                45deg,
+                #0f0f1a 0px,
+                #0f0f1a 2px,
+                #1a1a2b 2px,
+                #1a1a2b 4px
+            );
+            font-family: 'Segoe UI', sans-serif;
+            color: #fff;
             margin: 0;
             padding: 20px;
         }
-        h2 {
-            color: #333;
-            font-size: 24px;
+        h1 {
+            color: #00ffff;
+            text-align: center;
+            font-size: 2.5em;
+            margin-top: 0;
+        }
+        .drip-title {
+            text-align: center;
+            font-size: 1.2em;
+            color: #bbbbbb;
             margin-bottom: 20px;
         }
-        .filter-container {
-            margin-bottom: 20px;
+        table.dataTable {
+            width: 100% !important;
+            background-color: rgba(255, 255, 255, 0.05);
         }
-        select {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #fff;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        table.dataTable thead {
+            background-color: #112233;
+            color: #00ffff;
         }
-        select:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 1200px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            table-layout: auto;
-        }
-        th, td {
-            border: 1px solid #e0e0e0;
-            padding: 12px;
-            text-align: left;
-            vertical-align: top;
-            word-wrap: break-word;
-            max-width: 300px;
-        }
-        th {
-            background-color: #007bff;
+        table.dataTable tbody td {
             color: #fff;
-            font-weight: 600;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .badge-image {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #00ffff;
         }
-        tr:hover {
-            background-color: #f1f3f5;
+        #imageModal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
         }
-        @media screen and (max-width: 600px) {
-            th, td {
-                padding: 8px;
-                font-size: 14px;
-            }
-            select {
-                width: 100%;
-                font-size: 14px;
-            }
+        #modalContent {
+            margin: 5% auto;
+            display: block;
+            width: 60%;
+        }
+        #closeBtn {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h2>Badges Table Drip hunter by @cajucrypto</h2>
-    <div class="filter-container">
-        <label for="contractFilter">Filtrar por Contrato: </label>
-        <select id="contractFilter" onchange="filterTable()">
-            <option value="all">Todos</option>
-            <option value="Hypios">Hypios</option>
-            <option value="Hypers">Hypers</option>
-            <option value="others">Outros</option>
-        </select>
-    </div>
-    <table id="badgesTable">
-        <tr>
-            <th>Nome</th>
-            <th>Ícone</th>
-            <th>Requisitos</th>
-            <th>Qtd</th>
-            <th>Categoria</th>
-            <th>Contrato</th>
-        </tr>
-        <tr>
-            <td>Catbalio</td>
-            <td>🐱</td>
-            <td>Own any Hypio with the "Catbal Body" trait category; or any "Catbal Necklace"</td>
-            <td>1</td>
-            <td>Catbal Necklaces</td>
-            <td data-contract="0x63eb9d77D083cA10C304E28d5191321977fd0Bfb">Hypios</td>
-        </tr>
-        <tr>
-            <td>Niqabio</td>
-            <td>🧕</td>
-            <td>Own any Hypio with the "Niqab" trait category</td>
-            <td>1</td>
-            <td>Niqab</td>
-            <td data-contract="0x63eb9d77D083cA10C304E28d5191321977fd0Bfb">Hypios</td>
-        </tr>
-        <tr>
-            <td>I have 6 Hypios answer me</td>
-            <td>🦍</td>
-            <td>Own 6x Hypio</td>
-            <td>6</td>
-            <td></td>
-            <td data-contract="0x63eb9d77D083cA10C304E28d5191321977fd0Bfb">Hypios</td>
-        </tr>
-        <tr>
-            <td>Mono</td>
-            <td>👻</td>
-            <td>Own any "Mono" Race Hypers</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x9Be117D27f8037F6f549903C899e96E5755e96db">Hypers</td>
-        </tr>
-        <tr>
-            <td>DripTrader</td>
-            <td>💦</td>
-            <td>Own any "Drip" Race Hypers</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x9Be117D27f8037F6f549903C899e96E5755e96db">Hypers</td>
-        </tr>
-        <tr>
-            <td>BadBunny</td>
-            <td>🐰</td>
-            <td>Own any "Bunny" Outfit Hypers</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x9Be117D27f8037F6f549903C899e96E5755e96db">Hypers</td>
-        </tr>
-        <tr>
-            <td>Large penis</td>
-            <td>🥒</td>
-            <td>Own 10 Hypios, 10 Tiny Hypercats, 10 Hypers, 10 Liquinians, 10 Gems</td>
-            <td>10</td>
-            <td></td>
-            <td data-contract="0xDD59aC38cb15F688c18909bA1Ca708A76cC351F5">0xDD59aC38cb15F688c18909bA1Ca708A76cC351F5</td>
-        </tr>
-        <tr>
-            <td>Tremendous cock</td>
-            <td>🍆</td>
-            <td>Own 1x Catbal Hypio, 1x Niqab Hypio, 1x Mono Hypers, 1x Bunny Hypers, 1x Drip Hypers, 1x Liquina type LQinian</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0xfD43e36a9D4002C54a84DAB089a2EdE92ffB5C60">0xfD43e36a9D4002C54a84DAB089a2EdE92ffB5C60</td>
-        </tr>
-        <tr>
-            <td>Big Drip Traders</td>
-            <td>🌊</td>
-            <td>Own 5x Drip Hat Hypios, 5x Drip Race Hypers</td>
-            <td>5</td>
-            <td></td>
-            <td data-contract="0x9Be117D27f8037F6f549903C899e96E5755e96db">Hypers</td>
-        </tr>
-        <tr>
-            <td>Collectooor</td>
-            <td>🎨</td>
-            <td>Own 10 NFTs from 10 different collections</td>
-            <td>10</td>
-            <td></td>
-            <td data-contract=""></td>
-        </tr>
-        <tr>
-            <td>Cabal</td>
-            <td>✡️</td>
-            <td>Own 1x Hypio, 1x THC, 1x Gems, 1x Hypericardo</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x290e6bD2BA56DA9ab14b5bA4737dba4BAE3ed5c5">0x290e6bD2BA56DA9ab14b5bA4737dba4BAE3ed5c5</td>
-        </tr>
-        <tr>
-            <td>There is no second gayest</td>
-            <td>🌈</td>
-            <td>Own 1x Hypericardo</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x290e6bD2BA56DA9ab14b5bA4737dba4BAE3ed5c5">0x290e6bD2BA56DA9ab14b5bA4737dba4BAE3ed5c5</td>
-        </tr>
-        <tr>
-            <td>It belongs in a museum!</td>
-            <td>🕵️</td>
-            <td>Own 1 Purple Rank NFT (in Hypio, Hypers, Gems, THC)</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0xCC3D60fF11a268606C6a57bD6Db74b4208f1D30c">0xCC3D60fF11a268606C6a57bD6Db74b4208f1D30c</td>
-        </tr>
-        <tr>
-            <td>Procuror of Scarce Goods</td>
-            <td>🥷</td>
-            <td>Own 10 Purple Rank NFTs (in Hypio, Hypers, Gems, THC)</td>
-            <td>10</td>
-            <td></td>
-            <td data-contract="multiple">Multiple</td>
-        </tr>
-        <tr>
-            <td>toxic af</td>
-            <td>🧪</td>
-            <td>Own 3x Hypers with the "Radioactive" race</td>
-            <td>3</td>
-            <td></td>
-            <td data-contract="0x9Be117D27f8037F6f549903C899e96E5755e96db">Hypers</td>
-        </tr>
-        <tr>
-            <td>KittenMode</td>
-            <td>🦶</td>
-            <td>Own 1x kitten mode overlay hypio</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x63eb9d77D083cA10C304E28d5191321977fd0Bfb">Hypios</td>
-        </tr>
-        <tr>
-            <td>Harem</td>
-            <td>🕋</td>
-            <td>Own all 5 color niqabs</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x63eb9d77D083cA10C304E28d5191321977fd0Bfb">Hypios</td>
-        </tr>
-        <tr>
-            <td>E.T Phone Home</td>
-            <td>👽</td>
-            <td>Own 1x alien</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x63eb9d77D083cA10C304E28d5191321977fd0Bfb">Hypios</td>
-        </tr>
-        <tr>
-            <td>Arkantos</td>
-            <td>🔱</td>
-            <td>Own 1x Atlantean trait (dark or light)</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x63eb9d77D083cA10C304E28d5191321977fd0Bfb">Hypios</td>
-        </tr>
-        <tr>
-            <td>naked and famous</td>
-            <td>🥵</td>
-            <td>Own 1x naked hypio</td>
-            <td>1</td>
-            <td></td>
-            <td data-contract="0x63eb9d77D083cA10C304E28d5191321977fd0Bfb">Hypios</td>
-        </tr>
+
+    <h1>@cajucrypto</h1>
+    <div class="drip-title">🏅 DripTrade NFT Badge Tracker</div>
+
+    <table id="badgesTable" class="display">
+        <thead>
+            <tr>
+                <th>Ícone</th>
+                <th>Nome</th>
+                <th>Imagem</th>
+                <th>Requisitos</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+    <tr>
+        <td>🐱</td>
+        <td>Catbalio</td>
+        <td><span class="badge-image">friendly_pussy.svg</span></td>
+        <td>Own any Hypio with the "Catbal Body" trait category; or any "Catbal Necklace"</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🧕</td>
+        <td>Niqabio</td>
+        <td><span class="badge-image">sexy_niqab_lady.svg</span></td>
+        <td>Own any Hypio with the "Niqab" trait category</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🦍</td>
+        <td>I have 6 Hypios answer me</td>
+        <td><span class="badge-image">harambe.svg</span></td>
+        <td>Own 6x Hypio</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>👻</td>
+        <td>Mono</td>
+        <td><span class="badge-image">dorky_winky_ghost.svg</span></td>
+        <td>Own any "Mono" Race Hypers</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>💦</td>
+        <td>DripTrader</td>
+        <td><span class="badge-image">drip.svg</span></td>
+        <td>Own any "Drip" Race Hypers</td>
+        <td>Earned</td>
+    </tr>
+    
+    <tr>
+        <td>🐰</td>
+        <td>BadBunny</td>
+        <td><span class="badge-image">bunny_got_high.svg</span></td>
+        <td>Own any "Bunny" Outfit Hypers</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🥒</td>
+        <td>Large penis</td>
+        <td><span class="badge-image">cute_lil_cucumber.svg</span></td>
+        <td>Own 10 Hypios, 10 Tiny Hypercats, 10 Hypers, 10 Liquinians, 10 Gems</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🍆</td>
+        <td>Tremendous cock</td>
+        <td><span class="badge-image">patricks_big_pecker.svg</span></td>
+        <td>Own 1x Catbal Hypio, 1x Niqab Hypio, 1x Mono Hypers, 1x Bunny Hypers, 1x Drip Hypers, 1x Liquina type LQinian</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🌊</td>
+        <td>Big Drip Traders</td>
+        <td><span class="badge-image">crashing_waves.svg</span></td>
+        <td>Own 5x Drip Hat Hypios, 5x Drip Race Hypers</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🎨</td>
+        <td>Collectooor</td>
+        <td><span class="badge-image">paint_palette.svg</span></td>
+        <td>Own 10 NFTs from 10 different collections</td>
+        <td>Earned</td>
+    </tr>
+    
+    <tr>
+        <td>✡️</td>
+        <td>Cabal</td>
+        <td><span class="badge-image">star_of_david.svg</span></td>
+        <td>Own 1x Hypio, 1x THC, 1x Gems, 1x Hypericardo</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🌈</td>
+        <td>There is no second gayest</td>
+        <td><span class="badge-image">really_nice_rainbow.svg</span></td>
+        <td>Own 1x Hypericardo</td>
+        <td>Earned</td>
+    </tr>
+    
+    <tr>
+        <td>🕵️</td>
+        <td>It belongs in a museum!</td>
+        <td><span class="badge-image">detective_with_odd_beard.svg</span></td>
+        <td>Own 1 Purple Rank NFT (in Hypio, Hypers, Gems, THC)</td>
+        <td>Earned</td>
+    </tr>
+    
+    <tr>
+        <td>🥷</td>
+        <td>Procuror of Scarce Goods</td>
+        <td><span class="badge-image">nat_is_a_ninja.svg</span></td>
+        <td>Own 10 Purple Rank NFTs (in Hypio, Hypers, Gems, THC)</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🧪</td>
+        <td>toxic af</td>
+        <td><span class="badge-image">vial_with_green_shit.svg</span></td>
+        <td>Own 3x Hypers with the "Radioactive" race</td>
+        <td>Earned</td>
+    </tr>
+    
+    <tr>
+        <td>🦶</td>
+        <td>KittenMode</td>
+        <td><span class="badge-image">paws.svg</span></td>
+        <td>Own 1x kitten mode overlay hypio</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🕋</td>
+        <td>Harem</td>
+        <td><span class="badge-image">mecca.svg</span></td>
+        <td>Own all 5 color niqabs</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>👽</td>
+        <td>E.T Phone Home</td>
+        <td><span class="badge-image">alien.svg</span></td>
+        <td>Own 1x alien</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🔱</td>
+        <td>Arkantos</td>
+        <td><span class="badge-image">atlantis.svg</span></td>
+        <td>Own 1x Atlantean trait (dark or light)</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🥵</td>
+        <td>naked and famous</td>
+        <td><span class="badge-image">hot.svg</span></td>
+        <td>Own 1x naked hypio</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>👸🏾</td>
+        <td>Meow-mazing</td>
+        <td><span class="badge-image">meow_mazing.svg</span></td>
+        <td>Own 1x Main Hoe Mabel trait purrtardio</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>💧</td>
+        <td>Stay Wet</td>
+        <td><span class="badge-image">stay_wet.svg</span></td>
+        <td>Own 3x PiPs</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>👹</td>
+        <td>Odd Ninja</td>
+        <td><span class="badge-image">odd_ninja.svg</span></td>
+        <td>Own 1x Ninja robe trait Odd Otti</td>
+        <td>Locked</td>
+    </tr>
+    
+    <tr>
+        <td>🏅</td>
+        <td>Sold my soul</td>
+        <td><span class="badge-image">sold_my_soul.svg</span></td>
+        <td>Be a DripTrade affiliate on X</td>
+        <td>Locked</td>
+    </tr>
+    
+        </tbody>
     </table>
 
+    <div id="imageModal">
+        <span id="closeBtn">&times;</span>
+        <img id="modalContent">
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-        function filterTable() {
-            const filter = document.getElementById('contractFilter').value;
-            const rows = document.querySelectorAll('#badgesTable tr:not(:first-child)');
-
-            rows.forEach(row => {
-                const contract = row.querySelector('td:last-child').getAttribute('data-contract');
-                row.style.display = 'none';
-
-                if (filter === 'all') {
-                    row.style.display = '';
-                } else if (filter === 'Hypios' && contract === '0x63eb9d77D083cA10C304E28d5191321977fd0Bfb') {
-                    row.style.display = '';
-                } else if (filter === 'Hypers' && contract === '0x9Be117D27f8037F6f549903C899e96E5755e96db') {
-                    row.style.display = '';
-                } else if (filter === 'others' && contract !== '0x63eb9d77D083cA10C304E28d5191321977fd0Bfb' && contract !== '0x9Be117D27f8037F6f549903C899e96E5755e96db' && contract !== '') {
-                    row.style.display = '';
-                }
+        $(document).ready(function () {
+            $('#badgesTable').DataTable({
+                pageLength: 10
             });
-        }
+
+            $('.badge-image').click(function () {
+                var imageName = $(this).text();
+                var imageUrl = 'https://static.drip.trade/badges/' + imageName; // ajustar se necessário
+                $('#modalContent').attr('src', imageUrl);
+                $('#imageModal').show();
+            });
+
+            $('#closeBtn').click(function () {
+                $('#imageModal').hide();
+            });
+        });
     </script>
+
 </body>
 </html>
