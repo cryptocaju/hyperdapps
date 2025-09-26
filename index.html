@@ -248,12 +248,53 @@
                 padding: 1.5rem;
             }
         }
-    </style>
+    
+/* Animação do emoji de café piscando */
+@keyframes blinkCoffee {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.35; transform: translateY(-1px); }
+}
+.coffee-blink {
+    animation: blinkCoffee 1.2s infinite;
+    display: inline-block;
+}
+.donation-top {
+    margin: 0.75rem auto 0.5rem;
+    font-weight: 700;
+    color: #3b82f6;
+}
+.donation-top .hint {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+</style>
+
+<style>
+@keyframes pulseGlow {
+    0% { text-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6; }
+    50% { text-shadow: 0 0 15px #6366f1, 0 0 25px #6366f1; }
+    100% { text-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6; }
+}
+.donation-message {
+    animation: pulseGlow 2s infinite;
+}
+</style>
+
 </head>
 <body>
     <div class="container">
         <div class="header">
             <a href="https://twitter.com/cajucrypto" target="_blank" class="twitter-header">@cajucrypto</a>
+            <p class="donation-top">
+                <span class="coffee-blink">☕</span> Me paga um café?
+                <br>
+                <span class="hint">
+                    (Café hoje, gratidão eterna amanhã! 😄)<br>
+                    Carteira: <code style="color:#1e293b;">0x81bF43E16b15ccAF224BD8A4c59224FEAB65bBc5</code>
+                </span>
+            </p>
+
             <h1>Calculadora de Airdrop Aster</h1>
             <p class="subtitle">Calcule seus tokens Aster semanais baseado no seu Current Share</p>
         </div>
@@ -296,11 +337,6 @@
             <p class="logic-text">
                 O Current Share representa sua porcentagem do total de pontos acumulados por todos os participantes. 
                 Quanto maior seu share, maior será sua parte dos 80 milhões de tokens distribuídos semanalmente.
-                Para achar o Current Share voce pode ver em Rewards logo abaixo seu ranking 
-
-
-
-
             </p>
         </div>
 
@@ -311,10 +347,20 @@
             </div>
         </div>
 
-        <div class="footer">
-            <p>Desenvolvido por <a href="https://twitter.com/cajucrypto" target="_blank" class="twitter-link">@cajucrypto</a></p>
-            <p>Dados baseados na distribuição oficial de 80M tokens/semana da Aster</p>
-        </div>
+        
+<div class="footer">
+    <p style="margin-top: 1rem; font-weight: 600; color: #3b82f6;">
+        <span class="donation-message">☕ Me paga um café?</span><br>
+        <span style="font-size: 0.9rem; color: #64748b;">
+            (Café hoje, gratidão eterna amanhã! 😄)  
+            <br>Carteira: <code style="color:#1e293b;">0x81bF43E16b15ccAF224BD8A4c59224FEAB65bBc5</code>
+        </span>
+    </p>
+
+    <p>Desenvolvido por <a href="https://twitter.com/cajucrypto" target="_blank" class="twitter-link">@cajucrypto</a></p>
+    <p>Dados baseados na distribuição oficial de 80M tokens/semana da Aster</p>
+</div>
+
     </div>
 
     <script>
